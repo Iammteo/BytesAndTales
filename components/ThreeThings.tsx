@@ -16,7 +16,7 @@ export function ThreeThings() {
       title: 'Custom Orders',
       titleAccent: 'Orders',
       description:
-        'Bulk orders for events, weddings and meetings — placed in advance, hand-finished, and delivered across Greater Manchester.',
+        'Bulk orders for events, weddings and meetings — placed in advance, hand-finished, and delivered across United Kingdom.',
     },
   ];
 
