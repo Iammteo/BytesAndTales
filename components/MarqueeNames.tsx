@@ -1,5 +1,5 @@
 export function MarqueeNames() {
-  const names = ['Meat Pie', 'Sausage Roll', 'Cocktail Sausage Roll', 'Coconut Loaf', 'Banana Loaf', 'Oreo Loaf'];
+  const names = ['Meat Pie', 'Chicken Pie', 'Fish Roll', 'Sausage Roll', 'Puff Puff', 'Bread'];
 
   // Duplicate for seamless loop
   const looped = [...names, ...names];

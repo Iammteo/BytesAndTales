@@ -27,6 +27,8 @@ Delivery area: ${formData.area}
 
 Notes: ${formData.notes}
 
+(Delivery: £${site.deliveryFee.toFixed(2)} flat across ${site.deliveryArea})
+
 Thank you!`;
 
     const url = `https://wa.me/${site.whatsappNumber}?text=${encodeURIComponent(message)}`;
@@ -36,7 +38,6 @@ Thank you!`;
   return (
     <section id="enquire" className="py-32 bg-cream">
       <div className="wrap grid md:grid-cols-5 gap-12 md:gap-16">
-        {/* Left: copy (2 cols) */}
         <div className="md:col-span-2">
           <div className="inline-flex items-center gap-3 mb-6 font-sans text-[11px] uppercase tracking-[0.32em] text-orange">
             <span className="w-12 h-px bg-orange" />
@@ -65,10 +66,10 @@ Thank you!`;
             </ContactRow>
             <ContactRow label="Hours">{site.hours}</ContactRow>
             <ContactRow label="Delivery">{site.deliveryArea}</ContactRow>
+            <ContactRow label="Delivery fee">£{site.deliveryFee.toFixed(2)} flat</ContactRow>
           </div>
         </div>
 
-        {/* Right: actual form (3 cols) — clearly bordered card */}
         <div className="md:col-span-3">
           <form
             onSubmit={handleSubmit}
@@ -187,7 +188,6 @@ function FormField({
   placeholder?: string;
   options?: string[];
 }) {
-  // Common box styles for all inputs — clear bordered boxes, on cream
   const boxStyle =
     'w-full bg-cream border border-ink/20 rounded-sm px-4 py-3 font-serif text-base text-ink placeholder:text-ink-mute/60 focus:outline-none focus:border-wine focus:ring-1 focus:ring-wine/30 transition-all';
 

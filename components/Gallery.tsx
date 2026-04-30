@@ -9,7 +9,7 @@ export function Gallery() {
       tall: true,
     },
     {
-      src: '/images/menu/sausage-roll.jpg',
+      src: '/images/menu/sausage-roll.jpeg',
       caption: 'Sausage rolls, by the dozen',
       plate: 'Plate II',
       tall: false,

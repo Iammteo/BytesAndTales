@@ -1,7 +1,5 @@
 // Bytes & Tales — Menu data
 // Single source of truth. Edit here, site updates everywhere.
-//
-// PLACEHOLDER PRICES — replace with real prices when client confirms
 
 export type BulkOption = {
   qty: number;
@@ -9,14 +7,22 @@ export type BulkOption = {
   label: string;
 };
 
+export type Variant = {
+  id: string;
+  label: string;
+};
+
 export type MenuItem = {
   id: string;
   name: string;
-  category: 'Pastry' | 'Cake';
+  category: 'Pastry' | 'Cake' | 'Snack';
   description: string;
   pricePer: number;
   pricePerLabel: string;
   bulkOptions?: BulkOption[];
+  variants?: Variant[];
+  variantLabel?: string;
+  minOrder?: number;
   allergens: string[];
   leadTime: string;
   signature?: boolean;
@@ -32,13 +38,9 @@ export const menu: MenuItem[] = [
     category: 'Pastry',
     description:
       'Golden, buttery pastry packed with peppered minced beef, potato and carrot. The house signature — folded by hand and baked until the edges crackle.',
-    pricePer: 3.5,
-    pricePerLabel: 'per piece',
-    bulkOptions: [
-      { qty: 6, price: 18, label: 'box of 6' },
-      { qty: 12, price: 35, label: 'box of 12' },
-      { qty: 24, price: 65, label: 'box of 24' },
-    ],
+    pricePer: 2.5,
+    pricePerLabel: 'each',
+    bulkOptions: [{ qty: 12, price: 30, label: 'box of 12' }],
     allergens: ['gluten', 'dairy', 'eggs'],
     leadTime: '48 hours',
     signature: true,
@@ -47,81 +49,89 @@ export const menu: MenuItem[] = [
     romanNumeral: 'i.',
   },
   {
+    id: 'chicken-pie',
+    name: 'Chicken Pie',
+    category: 'Pastry',
+    description:
+      'Tender chicken in a delicate, herbed filling — folded into the same buttery shortcrust as our meat pie. Lighter, but no less considered.',
+    pricePer: 2.5,
+    pricePerLabel: 'each',
+    bulkOptions: [{ qty: 12, price: 30, label: 'box of 12' }],
+    allergens: ['gluten', 'dairy', 'eggs'],
+    leadTime: '48 hours',
+    image: '/images/menu/chicken-pie.jpeg',
+    imageAlt: 'Hand-folded chicken pies arranged on a wooden tray',
+    romanNumeral: 'ii.',
+  },
+  {
+    id: 'fish-roll',
+    name: 'Fish Roll',
+    category: 'Pastry',
+    description:
+      'Seasoned, flaked fish folded into glossy, golden pastry — a soft-bake classic done right. Best eaten warm.',
+    pricePer: 3,
+    pricePerLabel: 'each',
+    bulkOptions: [{ qty: 12, price: 36, label: 'box of 12' }],
+    minOrder: 6,
+    allergens: ['gluten', 'dairy', 'eggs', 'fish'],
+    leadTime: '48 hours',
+    image: '/images/menu/fish-roll.jpg',
+    imageAlt: 'Glossy fish rolls packed in a kraft box',
+    romanNumeral: 'iii.',
+  },
+  {
     id: 'sausage-roll',
     name: 'Sausage Roll',
     category: 'Pastry',
     description:
       'A proper roll — flaky, glossy, generously filled with seasoned beef. Made the long way, with a pinch of nutmeg folded into the meat.',
     pricePer: 3,
-    pricePerLabel: 'per roll',
-    bulkOptions: [
-      { qty: 6, price: 16, label: 'box of 6' },
-      { qty: 12, price: 30, label: 'box of 12' },
-    ],
+    pricePerLabel: 'each',
+    bulkOptions: [{ qty: 12, price: 36, label: 'box of 12' }],
     allergens: ['gluten', 'dairy', 'eggs'],
     leadTime: '48 hours',
-    image: '/images/menu/sausage-roll.jpg',
-    imageAlt: 'Golden sausage rolls stacked in a kraft box',
-    romanNumeral: 'ii.',
-  },
-  {
-    id: 'cocktail-sausage-roll',
-    name: 'Cocktail Sausage Roll',
-    category: 'Pastry',
-    description:
-      'Smaller, sharper, perfect with drinks — a single bite that disappears too quickly. Best ordered by the dozen for parties and gatherings.',
-    pricePer: 1.5,
-    pricePerLabel: 'per piece',
-    bulkOptions: [
-      { qty: 12, price: 16, label: 'dozen' },
-      { qty: 24, price: 30, label: 'two dozen' },
-    ],
-    allergens: ['gluten', 'dairy', 'eggs'],
-    leadTime: '48 hours',
-    image: '/images/menu/mixed-box.jpg',
-    imageAlt: 'Cocktail sausage rolls beside meat pies in a kraft box',
-    romanNumeral: 'iii.',
-  },
-  {
-    id: 'coconut-loaf',
-    name: 'Coconut Loaf',
-    category: 'Cake',
-    description:
-      'Toasted-coconut top, soft crumb beneath. Sweet but not too sweet — the kind of loaf that disappears slice by slice over a long afternoon.',
-    pricePer: 18,
-    pricePerLabel: 'per loaf',
-    allergens: ['gluten', 'dairy', 'eggs'],
-    leadTime: '48 hours',
-    image: '/images/menu/loaves.jpg',
-    imageAlt: 'Coconut-topped loaf cake on a wooden board',
+    image: '/images/menu/sausage-roll.jpeg',
+    imageAlt: 'Golden sausage rolls revealing seasoned beef filling',
     romanNumeral: 'iv.',
   },
   {
-    id: 'banana-cashew-loaf',
-    name: 'Banana & Cashew Loaf',
-    category: 'Cake',
+    id: 'puff-puff',
+    name: 'Puff Puff',
+    category: 'Snack',
     description:
-      'Ripe bananas folded into a warm-spiced batter, finished with toasted cashews. Tea-time perfection.',
+      'Pillowy, nutmeg-kissed dough fried until honeyed and golden. Best ordered by the tray for parties, gatherings, and Sunday afternoons.',
     pricePer: 20,
-    pricePerLabel: 'per loaf',
-    allergens: ['gluten', 'dairy', 'eggs', 'nuts'],
+    pricePerLabel: 'small tray',
+    bulkOptions: [
+      { qty: 1, price: 20, label: 'small tray' },
+      { qty: 1, price: 35, label: 'medium tray' },
+      { qty: 1, price: 45, label: 'large tray' },
+    ],
+    allergens: ['gluten', 'dairy', 'eggs'],
     leadTime: '48 hours',
-    image: '/images/menu/loaves.jpg',
-    imageAlt: 'Banana and cashew loaf cake',
+    image: '/images/menu/puff-puff.jpeg',
+    imageAlt: 'Golden, glossy puff puff piled in a bowl',
     romanNumeral: 'v.',
   },
   {
-    id: 'oreo-loaf',
-    name: 'Oreo Loaf',
+    id: 'banana-bread',
+    name: 'Bread',
     category: 'Cake',
     description:
-      'Chocolate sponge studded with whole Oreo halves. A house favourite for birthdays and unexpected weeknight celebrations.',
-    pricePer: 22,
+      'House-baked loaves, four ways. Tender crumb, warm-spiced batter, and a different finish on each — order one or mix the box.',
+    pricePer: 20,
     pricePerLabel: 'per loaf',
-    allergens: ['gluten', 'dairy', 'eggs', 'soy'],
+    variantLabel: 'Choose flavours',
+    variants: [
+      { id: 'classic', label: 'Classic' },
+      { id: 'coconut', label: 'Coconut' },
+      { id: 'cashew', label: 'Cashew Nut' },
+      { id: 'oreo', label: 'Oreo' },
+    ],
+    allergens: ['gluten', 'dairy', 'eggs', 'nuts (cashew variant)', 'soy (Oreo variant)'],
     leadTime: '48 hours',
     image: '/images/menu/loaves.jpg',
-    imageAlt: 'Oreo-studded chocolate loaf cake',
+    imageAlt: 'Four house loaves on a wooden tray, each with a different topping',
     romanNumeral: 'vi.',
   },
 ];

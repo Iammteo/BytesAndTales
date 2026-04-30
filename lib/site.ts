@@ -16,15 +16,16 @@ export const site = {
   whatsappNumber: '447835049957', // No leading + or 0; UK format
   whatsappDisplay: '+44 7835 049 957',
   email: 'ola@bytesandtales.co.uk', // TODO: confirm
-  instagram: 'bytes.and.tales', // TODO: confirm
+  instagram: 'bytes.and.tales',
 
   // Operating
   hours: 'Mon – Sat · 8am – 7pm',
   leadTimeMin: '48 hours',
   deliveryArea: 'Greater Manchester',
+  deliveryFee: 12, // GBP, flat rate
 
-  // Legal — TODO: confirm with client
-  foodHygieneRating: '5', // Required by UK law to display
+  // Legal
+  foodHygieneRating: '5',
   localAuthority: 'Manchester City Council',
 };
 
@@ -65,14 +66,18 @@ export const buildWhatsAppFullOrderUrl = (params: {
     : `${quantity}× ${itemName}`;
 
   const priceLine = bulkLabel
-    ? `£${total.toFixed(2)} total`
-    : `£${unitPrice.toFixed(2)} ${unitLabel} · £${total.toFixed(2)} total`;
+    ? `£${total.toFixed(2)} subtotal`
+    : `£${unitPrice.toFixed(2)} ${unitLabel} · £${total.toFixed(2)} subtotal`;
+
+  const grandTotal = total + site.deliveryFee;
 
   const lines = [
     `Hi Bytes & Tales! I'd like to place an order:`,
     ``,
     `🥐 ${itemLine}`,
     `💷 ${priceLine}`,
+    `🚚 Delivery: £${site.deliveryFee.toFixed(2)} (${site.deliveryArea})`,
+    `💰 Grand total: £${grandTotal.toFixed(2)}`,
     `📍 Postcode: ${postcode}`,
     `📅 Preferred date: ${date}`,
   ];

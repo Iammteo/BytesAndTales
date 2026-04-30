@@ -49,10 +49,8 @@ export function Menu() {
                 key={item.id}
                 className="grid grid-cols-12 gap-4 md:gap-8 py-10 border-b border-ink/15 group hover:bg-cream-warm/40 transition-colors"
               >
-                {/* Roman numeral */}
                 <div className="col-span-1 font-display italic text-2xl text-orange">{item.romanNumeral}</div>
 
-                {/* Image thumbnail */}
                 <div className="col-span-2 md:col-span-2">
                   <button
                     type="button"
@@ -70,7 +68,6 @@ export function Menu() {
                   </button>
                 </div>
 
-                {/* Name + description */}
                 <div className="col-span-9 md:col-span-5">
                   <h3 className="font-display text-3xl md:text-4xl mb-2 leading-tight">
                     {item.name.split(' ').slice(0, -1).join(' ')}{' '}
@@ -79,14 +76,29 @@ export function Menu() {
                   <p className="font-serif text-base text-ink-soft leading-relaxed mb-3 max-w-md">
                     {item.description}
                   </p>
-                  <div className="flex flex-wrap gap-2 text-[10px] font-sans uppercase tracking-[0.18em] text-ink-mute">
-                    {item.signature && <span className="text-orange">House Signature</span>}
-                    {item.signature && <span>·</span>}
+                  <div className="flex flex-wrap gap-2 items-center text-[10px] font-sans uppercase tracking-[0.18em] text-ink-mute">
+                    {item.signature && (
+                      <>
+                        <span className="text-orange">House Signature</span>
+                        <span>·</span>
+                      </>
+                    )}
+                    {item.variants && item.variants.length > 0 && (
+                      <>
+                        <span className="text-wine">{item.variants.length} flavours</span>
+                        <span>·</span>
+                      </>
+                    )}
+                    {item.minOrder && (
+                      <>
+                        <span className="text-wine">Min. order {item.minOrder}</span>
+                        <span>·</span>
+                      </>
+                    )}
                     <span>Allergens: {item.allergens.join(', ')}</span>
                   </div>
                 </div>
 
-                {/* Price + CTA */}
                 <div className="col-span-12 md:col-span-4 flex flex-col justify-between md:items-end">
                   <div className="md:text-right">
                     <div className="font-display text-2xl md:text-3xl text-wine">
@@ -129,12 +141,11 @@ export function Menu() {
           <p className="text-center mt-12 font-sans text-[10px] uppercase tracking-[0.22em] text-ink-mute">
             All items contain allergens — please notify us of any dietary requirements when ordering.
             <br />
-            Food Hygiene Rating · 5 (Very Good) · Manchester City Council
+            Delivery £12 across Greater Manchester · Food Hygiene Rating · 5 (Very Good) · Manchester City Council
           </p>
         </div>
       </section>
 
-      {/* Modal — rendered when an item is selected */}
       <QuickOrderModal
         item={activeItem}
         preselectedBulk={activeBulk}
