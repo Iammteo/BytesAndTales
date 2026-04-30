@@ -10,6 +10,8 @@ import { Press } from '@/components/Press';
 import { OrderForm } from '@/components/OrderForm';
 import { Footer } from '@/components/Footer';
 import { WhatsAppFloat } from '@/components/WhatsAppFloat';
+import { CartFloat } from '@/components/CartFloat';
+import { CartDrawer } from '@/components/CartDrawer';
 
 export default function Home() {
   return (
@@ -28,6 +30,8 @@ export default function Home() {
       </main>
       <Footer />
       <WhatsAppFloat />
+      <CartFloat />
+      <CartDrawer />
     </>
   );
 }

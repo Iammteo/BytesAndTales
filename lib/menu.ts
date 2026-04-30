@@ -10,6 +10,10 @@ export type BulkOption = {
 export type Variant = {
   id: string;
   label: string;
+  /** Optional override price (in GBP). If absent, parent's pricePer is used. */
+  price?: number;
+  /** Optional override unit label (e.g. "small tray"). */
+  unitLabel?: string;
 };
 
 export type MenuItem = {
@@ -41,6 +45,7 @@ export const menu: MenuItem[] = [
     pricePer: 2.5,
     pricePerLabel: 'each',
     bulkOptions: [{ qty: 12, price: 30, label: 'box of 12' }],
+    minOrder: 6,
     allergens: ['gluten', 'dairy', 'eggs'],
     leadTime: '48 hours',
     signature: true,
@@ -57,6 +62,7 @@ export const menu: MenuItem[] = [
     pricePer: 2.5,
     pricePerLabel: 'each',
     bulkOptions: [{ qty: 12, price: 30, label: 'box of 12' }],
+    minOrder: 6,
     allergens: ['gluten', 'dairy', 'eggs'],
     leadTime: '48 hours',
     image: '/images/menu/chicken-pie.jpeg',
@@ -88,6 +94,7 @@ export const menu: MenuItem[] = [
     pricePer: 3,
     pricePerLabel: 'each',
     bulkOptions: [{ qty: 12, price: 36, label: 'box of 12' }],
+    minOrder: 6,
     allergens: ['gluten', 'dairy', 'eggs'],
     leadTime: '48 hours',
     image: '/images/menu/sausage-roll.jpeg',
@@ -100,12 +107,13 @@ export const menu: MenuItem[] = [
     category: 'Snack',
     description:
       'Pillowy, nutmeg-kissed dough fried until honeyed and golden. Best ordered by the tray for parties, gatherings, and Sunday afternoons.',
-    pricePer: 20,
-    pricePerLabel: 'small tray',
-    bulkOptions: [
-      { qty: 1, price: 20, label: 'small tray' },
-      { qty: 1, price: 35, label: 'medium tray' },
-      { qty: 1, price: 45, label: 'large tray' },
+    pricePer: 20, // fallback price (not used; variants have their own)
+    pricePerLabel: 'tray',
+    variantLabel: 'Choose tray sizes',
+    variants: [
+      { id: 'small', label: 'Small tray', price: 20, unitLabel: 'small tray' },
+      { id: 'medium', label: 'Medium tray', price: 35, unitLabel: 'medium tray' },
+      { id: 'large', label: 'Large tray', price: 45, unitLabel: 'large tray' },
     ],
     allergens: ['gluten', 'dairy', 'eggs'],
     leadTime: '48 hours',
@@ -115,26 +123,36 @@ export const menu: MenuItem[] = [
   },
   {
     id: 'banana-bread',
-    name: 'Bread',
+    name: 'Banana Bread',
     category: 'Cake',
     description:
-      'House-baked loaves, four ways. Tender crumb, warm-spiced batter, and a different finish on each — order one or mix the box.',
+      'Ripe bananas folded into a warm-spiced batter, baked into a tender loaf. Sweet, soft, and perfect with a cup of tea.',
     pricePer: 20,
     pricePerLabel: 'per loaf',
-    variantLabel: 'Choose flavours',
-    variants: [
-      { id: 'classic', label: 'Classic' },
-      { id: 'coconut', label: 'Coconut' },
-      { id: 'cashew', label: 'Cashew Nut' },
-      { id: 'oreo', label: 'Oreo' },
-    ],
-    allergens: ['gluten', 'dairy', 'eggs', 'nuts (cashew variant)', 'soy (Oreo variant)'],
+    allergens: ['gluten', 'dairy', 'eggs'],
     leadTime: '48 hours',
     image: '/images/menu/loaves.jpg',
-    imageAlt: 'Four house loaves on a wooden tray, each with a different topping',
+    imageAlt: 'A freshly baked banana bread loaf on a wooden board',
     romanNumeral: 'vi.',
   },
 ];
 
 export const itemsByCategory = (category: MenuItem['category']) =>
   menu.filter((m) => m.category === category);
+
+/**
+ * Resolve the actual price for a variant — falling back to the parent pricePer
+ * if the variant doesn't override.
+ */
+export const variantPrice = (item: MenuItem, variantId: string): number => {
+  const v = item.variants?.find((x) => x.id === variantId);
+  return v?.price ?? item.pricePer;
+};
+
+/**
+ * Resolve the unit label for a variant.
+ */
+export const variantUnitLabel = (item: MenuItem, variantId: string): string => {
+  const v = item.variants?.find((x) => x.id === variantId);
+  return v?.unitLabel ?? item.pricePerLabel;
+};

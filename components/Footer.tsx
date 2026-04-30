@@ -31,8 +31,10 @@ export function Footer() {
             <ul className="space-y-2 font-serif text-cream/85">
               <li><Link href="#menu" className="hover:text-orange-soft transition-colors">Meat Pie</Link></li>
               <li><Link href="#menu" className="hover:text-orange-soft transition-colors">Chicken Pie</Link></li>
-              <li><Link href="#menu" className="hover:text-orange-soft transition-colors">Fish &amp; Sausage Rolls</Link></li>
-              <li><Link href="#menu" className="hover:text-orange-soft transition-colors">Bread</Link></li>
+              <li><Link href="#menu" className="hover:text-orange-soft transition-colors">Fish Rolls</Link></li>
+              <li ><Link href="#menu" className="hover:text-orange-soft transition-colors">Sausage Rolls</Link></li>
+              <li><Link href="#menu" className="hover:text-orange-soft transition-colors">Puff Puff</Link></li>
+              <li><Link href="#menu" className="hover:text-orange-soft transition-colors">Banana Bread</Link></li>
             </ul>
           </div>
 
@@ -67,9 +69,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-6 pt-6 border-t border-cream/10 font-sans text-[9px] uppercase tracking-[0.18em] text-cream/40 text-center">
-          Food Hygiene Rating &middot; 5 (Very Good) &middot; {site.localAuthority} &middot; All allergens declared on each item
-        </div>
+       
       </div>
     </footer>
   );

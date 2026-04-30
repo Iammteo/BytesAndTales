@@ -2,7 +2,7 @@ export function Ticker() {
   const items = [
     'Hand-folded daily',
     'Small bites · big delight',
-    'Delivered across Greater Manchester',
+    'Delivered across the United Kingdom',
     '48-hour lead time',
     'Bespoke boxes for events',
   ];

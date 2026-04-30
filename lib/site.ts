@@ -9,7 +9,7 @@ export const site = {
 
   // Location
   city: 'Manchester',
-  region: 'Greater Manchester',
+  region: 'Accross United Kingdom',
   established: '2024',
 
   // Contact
@@ -19,9 +19,9 @@ export const site = {
   instagram: 'bytes.and.tales',
 
   // Operating
-  hours: 'Mon – Sat · 8am – 7pm',
+  hours: 'Mon – Sat · 9am – 5pm',
   leadTimeMin: '48 hours',
-  deliveryArea: 'Greater Manchester',
+  deliveryArea: 'Across United Kingdom ',
   deliveryFee: 12, // GBP, flat rate
 
   // Legal

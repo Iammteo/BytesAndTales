@@ -72,7 +72,7 @@ export function Logo({
         <div
           className={`font-sans text-[10px] uppercase tracking-[0.28em] mt-0.5 ${subColor}`}
         >
-          Manchester · Est. 2024
+          Manchester · Est. 2026
         </div>
       </div>
     </div>
