@@ -32,6 +32,24 @@ export function Gallery() {
       plate: 'Plate V',
       tall: false,
     },
+    {
+    src: '/images/menu/suasage-roll-box.jpeg',
+    caption: 'Hand-folded, by the dozen',
+    plate: 'Plate VI',
+    tall: false,
+   },
+  {
+    src: '/images/menu/meatpie-box2.jpeg',
+    caption: 'Meat pie, golden hour',
+    plate: 'Plate VII',
+    tall: true,
+  },
+  {
+    src: '/images/menu/mixed-box2.jpeg',
+    caption: 'A mixed box, ready to travel',
+    plate: 'Plate VIII',
+    tall: false,
+  },
   ];
 
   return (
@@ -54,31 +72,32 @@ export function Gallery() {
           </div>
         </div>
 
-        {/* Asymmetric grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-          {plates.map((plate, i) => (
-            <figure
-              key={i}
-              className={`relative overflow-hidden bg-ink/5 ${
-                plate.tall ? 'aspect-[3/4] md:row-span-2' : 'aspect-square'
-              } group cursor-pointer`}
-            >
-              <Image
-                src={plate.src}
-                alt={plate.caption}
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-700"
-                sizes="(max-width: 768px) 50vw, 33vw"
-              />
-              <figcaption className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-ink/80 via-ink/40 to-transparent text-cream">
-                <div className="font-sans text-[10px] uppercase tracking-[0.22em] text-orange-soft mb-1">
-                  {plate.plate}
-                </div>
-                <div className="font-serif italic text-base">{plate.caption}</div>
-              </figcaption>
-            </figure>
-          ))}
+      {/* Masonry gallery */}
+<div className="columns-2 md:columns-3 gap-4 md:gap-6 [column-fill:_balance]">
+  {plates.map((plate, i) => (
+    <figure
+      key={i}
+      className={`relative overflow-hidden bg-ink/5 mb-4 md:mb-6 break-inside-avoid group cursor-pointer ${
+        plate.tall ? 'aspect-[3/4]' : 'aspect-square'
+      }`}
+    >
+      <Image
+        src={plate.src}
+        alt={plate.caption}
+        fill
+        className="object-cover group-hover:scale-105 transition-transform duration-700"
+        sizes="(max-width: 768px) 50vw, 33vw"
+      />
+      <figcaption className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-ink/80 via-ink/40 to-transparent text-cream">
+        <div className="font-sans text-[10px] uppercase tracking-[0.22em] text-orange-soft mb-1">
+          {plate.plate}
         </div>
+        <div className="font-serif italic text-base">{plate.caption}</div>
+      </figcaption>
+    </figure>
+  ))}
+</div>
+
       </div>
     </section>
   );

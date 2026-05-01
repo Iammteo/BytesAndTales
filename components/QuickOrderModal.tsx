@@ -30,16 +30,17 @@ export function QuickOrderModal({
   const [justAdded, setJustAdded] = useState(false);
 
   // Reset form when item changes
-  useEffect(() => {
-    setQuantity(preselectedBulk?.qty ?? item?.minOrder ?? 1);
-    const initial: Record<string, number> = {};
-    item?.variants?.forEach((v) => {
-      initial[v.id] = preselectedVariant?.id === v.id ? 1 : 0;
-    });
-    setVariantQtys(initial);
-    setErrors({});
-    setJustAdded(false);
-  }, [item, preselectedBulk, preselectedVariant]);
+ useEffect(() => {
+  const initialQty = preselectedBulk?.qty ?? item?.minOrder ?? item?.quantityStep ?? 1;
+  setQuantity(initialQty);
+  const initial: Record<string, number> = {};
+  item?.variants?.forEach((v) => {
+    initial[v.id] = preselectedVariant?.id === v.id ? 1 : 0;
+  });
+  setVariantQtys(initial);
+  setErrors({});
+  setJustAdded(false);
+}, [item, preselectedBulk, preselectedVariant]);
 
   // Lock body scroll
   useEffect(() => {
@@ -93,6 +94,9 @@ export function QuickOrderModal({
       if (item.minOrder && quantity < item.minOrder) {
         newErrors.quantity = `Minimum order is ${item.minOrder}`;
       }
+      if (item.quantityStep && quantity % item.quantityStep !== 0) {
+        newErrors.quantity = `Quantity must be a multiple of ${item.quantityStep}`;
+}
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -275,43 +279,46 @@ export function QuickOrderModal({
             )}
 
             {/* Plain quantity */}
-            {!isBulk && !priced && !hasVariants && (
-              <Field label="Quantity *" error={errors.quantity}>
-                <div className="flex items-center gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setQuantity(Math.max(item.minOrder ?? 1, quantity - 1))}
-                    aria-label="Decrease quantity"
-                    className="w-10 h-10 border border-ink/20 rounded-sm font-sans text-lg text-ink hover:bg-cream-warm hover:border-wine transition-all"
-                  >
-                    −
-                  </button>
-                  <input
-                    type="number"
-                    min={item.minOrder ?? 1}
-                    max={200}
-                    value={quantity}
-                    onChange={(e) =>
-                      setQuantity(Math.max(item.minOrder ?? 1, Number(e.target.value) || 1))
-                    }
-                    className="w-20 text-center bg-cream-warm/40 border border-ink/20 rounded-sm py-2.5 font-display text-lg text-ink focus:outline-none focus:border-wine focus:ring-1 focus:ring-wine/30 transition-all"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setQuantity(Math.min(200, quantity + 1))}
-                    aria-label="Increase quantity"
-                    className="w-10 h-10 border border-ink/20 rounded-sm font-sans text-lg text-ink hover:bg-cream-warm hover:border-wine transition-all"
-                  >
-                    +
-                  </button>
-                  {item.minOrder && (
-                    <span className="font-sans text-xs uppercase tracking-[0.18em] text-ink-mute ml-2">
-                      Min. {item.minOrder}
-                    </span>
-                  )}
-                </div>
-              </Field>
-            )}
+          {!isBulk && !priced && !hasVariants && (
+  <Field label="Quantity *" error={errors.quantity}>
+    <div className="flex items-center gap-3 flex-wrap">
+      <button
+        type="button"
+        onClick={() => {
+          const step = item.quantityStep ?? 1;
+          const min = item.minOrder ?? 1;
+           setQuantity((prev) => Math.max(min, prev - step));
+        }}
+        aria-label="Decrease quantity"
+        disabled={quantity <= (item.minOrder ?? 1)}
+        className="w-10 h-10 border border-ink/20 rounded-sm font-sans text-lg text-ink hover:bg-cream-warm hover:border-wine transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+      >
+        −
+      </button>
+      <span className="w-20 text-center bg-cream-warm/40 border border-ink/20 rounded-sm py-2.5 font-display text-lg text-ink">
+        {quantity}
+      </span>
+      <button
+        type="button"
+        onClick={() => {
+          const step = item.quantityStep ?? 1;
+          setQuantity((prev) => Math.min(200, prev + step));
+        }}
+        aria-label="Increase quantity"
+        className="w-10 h-10 border border-ink/20 rounded-sm font-sans text-lg text-ink hover:bg-cream-warm hover:border-wine transition-all"
+      >
+        +
+      </button>
+      <span className="font-sans text-xs uppercase tracking-[0.18em] text-ink-mute ml-2">
+        {item.quantityStep && item.quantityStep > 1
+          ? `Sold in ${item.quantityStep}s · Min. ${item.minOrder ?? item.quantityStep}`
+          : item.minOrder
+          ? `Min. ${item.minOrder}`
+          : ''}
+      </span>
+    </div>
+  </Field>
+)}
 
             <div className="bg-orange/10 border border-orange/30 rounded-sm px-4 py-3">
               <div className="font-sans text-[10px] uppercase tracking-[0.22em] text-orange mb-1">Allergens</div>

@@ -27,6 +27,7 @@ export type MenuItem = {
   variants?: Variant[];
   variantLabel?: string;
   minOrder?: number;
+  quantityStep?: number;
   allergens: string[];
   leadTime: string;
   signature?: boolean;
@@ -46,6 +47,7 @@ export const menu: MenuItem[] = [
     pricePerLabel: 'each',
     bulkOptions: [{ qty: 12, price: 30, label: 'box of 12' }],
     minOrder: 6,
+    quantityStep: 6,
     allergens: ['gluten', 'dairy', 'eggs'],
     leadTime: '48 hours',
     signature: true,
@@ -63,6 +65,7 @@ export const menu: MenuItem[] = [
     pricePerLabel: 'each',
     bulkOptions: [{ qty: 12, price: 30, label: 'box of 12' }],
     minOrder: 6,
+    quantityStep: 6,
     allergens: ['gluten', 'dairy', 'eggs'],
     leadTime: '48 hours',
     image: '/images/menu/chicken-pie.jpeg',
@@ -79,6 +82,7 @@ export const menu: MenuItem[] = [
     pricePerLabel: 'each',
     bulkOptions: [{ qty: 12, price: 36, label: 'box of 12' }],
     minOrder: 6,
+    quantityStep: 6,
     allergens: ['gluten', 'dairy', 'eggs', 'fish'],
     leadTime: '48 hours',
     image: '/images/menu/fish-roll.jpg',
@@ -95,6 +99,7 @@ export const menu: MenuItem[] = [
     pricePerLabel: 'each',
     bulkOptions: [{ qty: 12, price: 36, label: 'box of 12' }],
     minOrder: 6,
+    quantityStep: 6,
     allergens: ['gluten', 'dairy', 'eggs'],
     leadTime: '48 hours',
     image: '/images/menu/sausage-roll.jpeg',

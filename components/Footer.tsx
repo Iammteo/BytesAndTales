@@ -54,6 +54,8 @@ export function Footer() {
               <li><a href={buildWhatsAppGeneralUrl()} target="_blank" rel="noopener noreferrer" className="hover:text-orange-soft transition-colors">WhatsApp</a></li>
               <li><a href={`https://instagram.com/${site.instagram}`} target="_blank" rel="noopener noreferrer" className="hover:text-orange-soft transition-colors">Instagram</a></li>
               <li><a href={`mailto:${site.email}`} className="hover:text-orange-soft transition-colors">Email</a></li>
+              <li><a href={site.googleReviewUrl} target="_blank" rel="noopener noreferrer" className="hover:text-orange-soft transition-colors">Leave a Review</a></li>
+
             </ul>
           </div>
         </div>

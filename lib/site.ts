@@ -17,6 +17,7 @@ export const site = {
   whatsappDisplay: '+44 7835 049 957',
   email: 'ola@bytesandtales.co.uk', // TODO: confirm
   instagram: 'bytes.and.tales',
+  googleReviewUrl: 'https://www.google.com/search?client=safari&hs=6hT&sca_esv=cc26d5f28dfddab8&hl=en-gb&sxsrf=ANbL-n5vobFtmMK8oqDpx4whaAb5lbkpAg%3A1777667843317&kgmid=%2Fg%2F11z5xt3kxr&q=Bytes%20and%20Tales&shem=rimspwouoe&shndl=30&source=sh%2Fx%2Floc%2Fact%2Fm4%2F3',
 
   // Operating
   hours: 'Mon – Sat · 9am – 5pm',
