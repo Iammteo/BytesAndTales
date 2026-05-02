@@ -41,15 +41,20 @@ export function CartDrawer() {
   const grandTotal = subtotal + site.deliveryFee;
 
   const handleCheckout = () => {
-    const newErrors: { [k: string]: string } = {};
-    if (lines.length === 0) newErrors.cart = 'Your cart is empty';
-    if (!postcode.trim()) newErrors.postcode = 'Postcode is required';
-    if (!date) newErrors.date = 'Please choose a delivery date';
+  const newErrors: { [k: string]: string } = {};
+  if (lines.length === 0) newErrors.cart = 'Your cart is empty';
+  if (!postcode.trim()) newErrors.postcode = 'Postcode is required';
+  if (!date) {
+    newErrors.date = 'Please choose a delivery date';
+  } else if (date < minDate) {
+    newErrors.date = 'Date must be at least 48 hours from now';
+  }
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
+  if (Object.keys(newErrors).length > 0) {
+    setErrors(newErrors);
+    return;
+  }
+
 
     const url = buildWhatsAppCartUrl({
       lines,
@@ -191,14 +196,32 @@ export function CartDrawer() {
                 />
               </Field>
               <Field label="Preferred delivery date *" error={errors.date}>
-                <input
-                  type="date"
-                  value={date}
-                  min={minDate}
-                  onChange={(e) => setDate(e.target.value)}
-                  className="w-full bg-cream border border-ink/20 rounded-sm px-3 py-2.5 font-serif text-base text-ink focus:outline-none focus:border-wine focus:ring-1 focus:ring-wine/30"
-                />
-              </Field>
+  <input
+    type="date"
+    value={date}
+    min={minDate}
+    onChange={(e) => {
+      const picked = e.target.value;
+      setDate(picked);
+      // Re-validate against minDate (some mobile browsers ignore the min attribute)
+      if (picked && picked < minDate) {
+        setErrors((prev) => ({
+          ...prev,
+          date: 'Please pick a date at least 48 hours from now',
+        }));
+      } else {
+        setErrors((prev) => {
+          const { date: _omit, ...rest } = prev;
+          return rest;
+        });
+      }
+    }}
+    className="w-full bg-cream border border-ink/20 rounded-sm px-3 py-2.5 font-serif text-base text-ink focus:outline-none focus:border-wine focus:ring-1 focus:ring-wine/30"
+  />
+  <span className="block mt-1.5 font-sans text-[10px] uppercase tracking-[0.18em] text-ink-mute">
+    Minimum 48 hours notice
+  </span>
+</Field>
               <Field label="Notes (optional)">
                 <textarea
                   value={notes}
