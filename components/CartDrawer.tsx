@@ -33,10 +33,14 @@ export function CartDrawer() {
   }, [isOpen, closeCart]);
 
   const minDate = (() => {
-    const d = new Date();
-    d.setDate(d.getDate() + 2);
-    return d.toISOString().split('T')[0];
-  })();
+  const d = new Date();
+  d.setDate(d.getDate() + 2);
+  // Use local date components to avoid UTC shift
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+})();
 
   const grandTotal = subtotal + site.deliveryFee;
 
