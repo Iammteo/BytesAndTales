@@ -12,8 +12,8 @@ export function CartDrawer() {
   const [date, setDate] = useState('');
   const [notes, setNotes] = useState('');
   const [errors, setErrors] = useState<{ [k: string]: string }>({});
+  const [shakeDate, setShakeDate] = useState(false);
 
-  // Lock body scroll when open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -25,40 +25,48 @@ export function CartDrawer() {
     };
   }, [isOpen]);
 
-  // ESC closes
   useEffect(() => {
     const onEsc = (e: KeyboardEvent) => e.key === 'Escape' && closeCart();
     if (isOpen) window.addEventListener('keydown', onEsc);
     return () => window.removeEventListener('keydown', onEsc);
   }, [isOpen, closeCart]);
 
+  // Compute minimum delivery date (48h from now) using local timezone
   const minDate = (() => {
-  const d = new Date();
-  d.setDate(d.getDate() + 2);
-  // Use local date components to avoid UTC shift
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd}`;
-})();
+    const d = new Date();
+    d.setDate(d.getDate() + 2);
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  })();
 
   const grandTotal = subtotal + site.deliveryFee;
 
+  const triggerShake = () => {
+    setShakeDate(true);
+    setTimeout(() => setShakeDate(false), 500);
+  };
+
   const handleCheckout = () => {
-  const newErrors: { [k: string]: string } = {};
-  if (lines.length === 0) newErrors.cart = 'Your cart is empty';
-  if (!postcode.trim()) newErrors.postcode = 'Postcode is required';
-  if (!date) {
-    newErrors.date = 'Please choose a delivery date';
-  } else if (date < minDate) {
-    newErrors.date = 'Date must be at least 48 hours from now';
-  }
+    const newErrors: { [k: string]: string } = {};
+    if (lines.length === 0) newErrors.cart = 'Your cart is empty';
+    if (!postcode.trim()) newErrors.postcode = 'Postcode is required';
+    if (!date) {
+      newErrors.date = 'Please choose a delivery date';
+    } else if (date < minDate) {
+      newErrors.date = 'Date must be at least 48 hours from now';
+    }
 
-  if (Object.keys(newErrors).length > 0) {
-    setErrors(newErrors);
-    return;
-  }
-
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      if (newErrors.date) triggerShake();
+      // Light haptic feedback on supported devices
+      if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+        navigator.vibrate(60);
+      }
+      return;
+    }
 
     const url = buildWhatsAppCartUrl({
       lines,
@@ -73,6 +81,8 @@ export function CartDrawer() {
   };
 
   if (!isOpen) return null;
+
+  const dateHasError = !!errors.date;
 
   return (
     <>
@@ -118,28 +128,19 @@ export function CartDrawer() {
             lines.map((line) => {
               const isAtomic = !!(line.bulkLabel || line.variantBreakdown);
               return (
-                <div
-                  key={line.id}
-                  className="flex gap-4 pb-4 border-b border-ink/10 last:border-b-0"
-                >
+                <div key={line.id} className="flex gap-4 pb-4 border-b border-ink/10 last:border-b-0">
                   {line.imageUrl && (
                     <div className="relative w-16 h-16 rounded-sm overflow-hidden flex-shrink-0 bg-cream-warm">
                       <Image src={line.imageUrl} alt="" fill className="object-cover" sizes="64px" />
                     </div>
                   )}
                   <div className="flex-1 min-w-0">
-                    <div className="font-display text-lg text-ink leading-tight">
-                      {line.productName}
-                    </div>
+                    <div className="font-display text-lg text-ink leading-tight">{line.productName}</div>
                     {line.bulkLabel && (
-                      <div className="font-serif italic text-sm text-ink-soft mt-0.5">
-                        {line.bulkLabel}
-                      </div>
+                      <div className="font-serif italic text-sm text-ink-soft mt-0.5">{line.bulkLabel}</div>
                     )}
                     {line.variantBreakdown && (
-                      <div className="font-serif italic text-sm text-ink-soft mt-0.5">
-                        {line.variantBreakdown}
-                      </div>
+                      <div className="font-serif italic text-sm text-ink-soft mt-0.5">{line.variantBreakdown}</div>
                     )}
                     <div className="flex items-center gap-3 mt-2">
                       {isAtomic ? (
@@ -196,36 +197,53 @@ export function CartDrawer() {
                   value={postcode}
                   onChange={(e) => setPostcode(e.target.value)}
                   placeholder="e.g. M20 4PE"
-                  className="w-full bg-cream border border-ink/20 rounded-sm px-3 py-2.5 font-serif text-base text-ink placeholder:text-ink-mute/60 focus:outline-none focus:border-wine focus:ring-1 focus:ring-wine/30 uppercase"
+                  className={`w-full bg-cream border rounded-sm px-3 py-2.5 font-serif text-base text-ink placeholder:text-ink-mute/60 focus:outline-none focus:ring-1 transition-all uppercase ${
+                    errors.postcode
+                      ? 'border-red-600 ring-1 ring-red-600/30 bg-red-50'
+                      : 'border-ink/20 focus:border-wine focus:ring-wine/30'
+                  }`}
                 />
               </Field>
-              <Field label="Preferred delivery date *" error={errors.date}>
-  <input
-    type="date"
-    value={date}
-    min={minDate}
-    onChange={(e) => {
-      const picked = e.target.value;
-      setDate(picked);
-      // Re-validate against minDate (some mobile browsers ignore the min attribute)
-      if (picked && picked < minDate) {
-        setErrors((prev) => ({
-          ...prev,
-          date: 'Please pick a date at least 48 hours from now',
-        }));
-      } else {
-        setErrors((prev) => {
-          const { date: _omit, ...rest } = prev;
-          return rest;
-        });
-      }
-    }}
-    className="w-full bg-cream border border-ink/20 rounded-sm px-3 py-2.5 font-serif text-base text-ink focus:outline-none focus:border-wine focus:ring-1 focus:ring-wine/30"
-  />
-  <span className="block mt-1.5 font-sans text-[10px] uppercase tracking-[0.18em] text-ink-mute">
-    Minimum 48 hours notice
-  </span>
-</Field>
+
+              <Field label="Preferred delivery date *" error={errors.date} highlight={dateHasError}>
+                <div className={shakeDate ? 'shake-anim' : ''}>
+                  <input
+                    type="date"
+                    value={date}
+                    min={minDate}
+                    onChange={(e) => {
+                      const picked = e.target.value;
+                      setDate(picked);
+                      if (picked && picked < minDate) {
+                        setErrors((prev) => ({
+                          ...prev,
+                          date: 'That date is too soon — we need 48 hours notice',
+                        }));
+                        triggerShake();
+                        if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+                          navigator.vibrate(60);
+                        }
+                      } else {
+                        setErrors((prev) => {
+                          const { date: _omit, ...rest } = prev;
+                          return rest;
+                        });
+                      }
+                    }}
+                    className={`w-full bg-cream border rounded-sm px-3 py-2.5 font-serif text-base text-ink focus:outline-none focus:ring-1 transition-all ${
+                      dateHasError
+                        ? 'border-red-600 ring-2 ring-red-600/40 bg-red-50 text-red-900'
+                        : 'border-ink/20 focus:border-wine focus:ring-wine/30'
+                    }`}
+                  />
+                </div>
+                <span className={`block mt-1.5 font-sans text-[10px] uppercase tracking-[0.18em] ${
+                  dateHasError ? 'text-red-700 font-semibold' : 'text-ink-mute'
+                }`}>
+                  Minimum 48 hours notice
+                </span>
+              </Field>
+
               <Field label="Notes (optional)">
                 <textarea
                   value={notes}
@@ -251,6 +269,24 @@ export function CartDrawer() {
                 <span className="font-display text-2xl text-wine">£{grandTotal.toFixed(2)}</span>
               </div>
             </div>
+
+            {Object.keys(errors).length > 0 && (
+              <div className="px-4 py-3 bg-red-50 border-2 border-red-600 rounded-sm flex items-start gap-3 error-banner-anim">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2.5" aria-hidden className="flex-shrink-0 mt-0.5">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" strokeLinecap="round" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" strokeLinecap="round" />
+                </svg>
+                <div className="flex-1">
+                  <p className="font-sans text-[12px] uppercase tracking-[0.15em] text-red-700 font-bold mb-1">
+                    Cannot send order yet
+                  </p>
+                  <p className="font-serif text-sm text-red-900">
+                    {errors.date || errors.postcode || errors.cart}
+                  </p>
+                </div>
+              </div>
+            )}
 
             <button
               type="button"
@@ -281,23 +317,53 @@ export function CartDrawer() {
             from { transform: translateX(100%); }
             to { transform: translateX(0); }
           }
+          @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-6px); }
+            20%, 40%, 60%, 80% { transform: translateX(6px); }
+          }
+          @keyframes errorBannerIn {
+            from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+          }
           .animate-fadeIn { animation: fadeIn 0.2s ease-out; }
           .animate-slideInRight { animation: slideInRight 0.3s ease-out; }
+          :global(.shake-anim) { animation: shake 0.45s cubic-bezier(.36,.07,.19,.97); }
+          :global(.error-banner-anim) { animation: errorBannerIn 0.25s ease-out; }
         `}</style>
       </aside>
     </>
   );
 }
 
-function Field({ label, children, error }: { label: string; children: React.ReactNode; error?: string }) {
+function Field({
+  label,
+  children,
+  error,
+  highlight,
+}: {
+  label: string;
+  children: React.ReactNode;
+  error?: string;
+  highlight?: boolean;
+}) {
   return (
     <label className="block">
-      <span className="block font-sans text-[10px] uppercase tracking-[0.18em] text-ink-soft mb-1.5">
+      <span className={`block font-sans text-[10px] uppercase tracking-[0.18em] mb-1.5 transition-colors ${
+        highlight || error ? 'text-red-700 font-bold' : 'text-ink-soft'
+      }`}>
         {label}
       </span>
       {children}
       {error && (
-        <span className="block mt-1 font-sans text-[11px] text-wine">{error}</span>
+        <span className="flex items-center gap-1.5 mt-2 font-sans text-[12px] text-red-700 font-semibold">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden>
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" strokeLinecap="round" />
+            <line x1="12" y1="16" x2="12.01" y2="16" strokeLinecap="round" />
+          </svg>
+          {error}
+        </span>
       )}
     </label>
   );
