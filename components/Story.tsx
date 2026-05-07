@@ -38,7 +38,7 @@ export function Story() {
           </blockquote>
 
           <p className="font-serif text-lg leading-relaxed text-ink-soft mb-6">
-            Our recipes lean on what's familiar — peppered minced beef, nutmeg-scented dough, hand-crimped edges, and toasted-coconut tops on loaves your aunt would recognise. We bake in small batches across Greater Manchester, never compromise on butter, and only deliver what we'd happily eat ourselves.
+            Our recipes lean on what's familiar — peppered minced beef dough, hand-crimped edges, and toasted-coconut tops on loaves your aunt would recognise. We bake in small batches across Greater Manchester, never compromise on butter, and only deliver what we'd happily eat ourselves.
           </p>
 
           {/* Three stats */}

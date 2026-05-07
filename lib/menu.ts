@@ -131,13 +131,20 @@ export const menu: MenuItem[] = [
     name: 'Banana Bread',
     category: 'Cake',
     description:
-      'Ripe bananas folded into a warm-spiced batter, baked into a tender loaf. Sweet, soft, and perfect with a cup of tea.',
+      'House-baked loaves, four ways. Tender crumb, warm-spiced batter, and a different finish on each — order one or mix them up.',
     pricePer: 20,
     pricePerLabel: 'per loaf',
-    allergens: ['gluten', 'dairy', 'eggs'],
+    variantLabel: 'Choose flavours *',
+    variants: [
+      { id: 'classic', label: 'Classic' },
+      { id: 'coconut', label: 'Coconut' },
+      { id: 'cashew', label: 'Cashew Nut' },
+      { id: 'oreo', label: 'Oreo' },
+    ],
+    allergens: ['gluten', 'dairy', 'eggs', 'nuts (cashew variant)', 'soy (Oreo variant)'],
     leadTime: '48 hours',
     image: '/images/menu/loaves.jpg',
-    imageAlt: 'A freshly baked banana bread loaf on a wooden board',
+    imageAlt: 'House-baked banana bread loaves, four flavours',
     romanNumeral: 'vi.',
   },
 ];
