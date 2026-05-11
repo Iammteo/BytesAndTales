@@ -154,7 +154,7 @@ export function Nav() {
       Open
     </div>
     <div className="font-serif text-base text-cream/85">
-      Mon – Sat · 8am – 7pm
+      Mon – Sat · 9am – 5pm
     </div>
     <div className="font-sans text-[10px] uppercase tracking-[0.22em] text-orange-soft mt-5 mb-1">
       Delivery
