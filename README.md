@@ -92,40 +92,6 @@ For best performance:
 
 ---
 
-## ⚠️ Before launch — TODO
-
-This is a complete site shell, but these items must be confirmed/configured before going live:
-
-### Critical
-- [ ] **WhatsApp number** — replace `447XXXXXXXXX` in `lib/site.ts` with the real Business number
-- [ ] **Real menu prices** — confirm with client and update `lib/menu.ts`
-- [ ] **Food Hygiene Rating** — confirm her actual rating and update site config + footer
-- [ ] **Domain** — connect `bytesandtales.co.uk` via Vercel
-- [ ] **Real testimonials** — replace placeholder quotes in `components/Press.tsx`
-- [ ] **Order form backend** — currently opens WhatsApp; consider adding email backup via Formspree or Resend
-
-### Nice to have
-- [ ] **Stripe Payment Links** — for direct payment after WhatsApp confirmation
-- [ ] **Instagram feed integration** — embed recent posts
-- [ ] **Google Business Profile** — set up and verify
-- [ ] **Plausible Analytics** — add tracking
-- [ ] **Open Graph image** — design a social preview image
-
----
-
-## Deployment to Vercel
-
-1. Push this repo to GitHub (private repo recommended)
-2. Visit [vercel.com/new](https://vercel.com/new)
-3. Import the GitHub repo
-4. Vercel auto-detects Next.js — click Deploy
-5. Add the custom domain `bytesandtales.co.uk` in Vercel → Settings → Domains
-6. Update Namecheap (or wherever the domain is) with Vercel's nameservers
-
-Build will complete in ~2-3 minutes.
-
----
-
 ## Brand assets
 
 - **Logo**: `public/images/brand/logo.png` (geometric B mark + wordmark)
@@ -146,4 +112,4 @@ Build will complete in ~2-3 minutes.
 Built and maintained by **Klavoir Technologies**.
 Contact: [ola@klavoir.com](mailto:ola@klavoir.com)
 
-30 days post-launch support included.
+
